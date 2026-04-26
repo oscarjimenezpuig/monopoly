@@ -20,11 +20,13 @@
 #define SALIDA 1
 #define CALLE 2
 #define NEGOCIO 3
-#define TRANSPORTE 4
+#define TRENES 4
 #define CARCEL 5
 #define IR_CARCEL 6
 #define COMUNIDAD 7
 #define SUERTE 8
+#define IMPUESTO 9
+#define PARKING 10
 
 
 typedef struct {
@@ -41,8 +43,10 @@ typedef struct {
 } Negocio;
 
 typedef struct {
-    u2 alquiler; /* alquiler basico por un transporte (directamente proporcional) */
-} Transporte;
+    u2 alquiler_base; /* alquiler basico por un transporte (directamente proporcional) */
+    u1 estaciones; /* estaciones que tiene el propietario de esta estacion */
+    u2 alquiler; /* alquiler total */
+} Tren;
 
 typedef struct {
     u2 precio;
@@ -50,15 +54,33 @@ typedef struct {
     union {
         Calle calle;
         Negocio negocio;
-        Transporte transporte;
+        Tren tren;
     };
 } Comprable;
+
+typedef struct {
+    u2 premio;
+} Salida;
+
+typedef struct {
+    u2 impuesto;
+} Impuesto;
+
+typedef struct {
+    u2 sancion;
+} Carcel;
 
 typedef struct {
     u1 tipo;
     u1 numero; /* numero de casilla a partir de 0 */
     char nombre[NOMSIZ+1];
-    Comprable comprable;
+    union {
+        Comprable comprable;
+        Salida salida;
+        Impuesto impuesto;
+        Carcel carcel;
+
+    };
 } Casilla;
 
 typedef struct {
@@ -85,5 +107,8 @@ extern Jugadores jugadores;
 
 void tabinit();
 /* define el tablero */
+
+void tabprt();
+/* imprime todo el tablero */
 
 

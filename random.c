@@ -1,5 +1,7 @@
 /* MONOPOLY 26/4/26 */
 
+#include "random.h"
+
 int rnd(int a,int b) {
     static u1 def=0;
     if(!def) {

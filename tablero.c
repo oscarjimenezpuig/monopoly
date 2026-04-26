@@ -66,17 +66,17 @@ static void callnew(u1 numero,char* nombre,u1 barrio,u2 precio,u2 precio_casa,u2
 
 static void callprt(Casilla c) {
     Barrio b=barrios[c.comprable.calle.barrio];
-    printf("Num: %i Carrer: %s Barri: %s",c.numero,c.nombre,b.nombre);NLN;
+    printf("%02i. Calle %s (%s)",c.numero,c.nombre,b.nombre);NLN;
     if(c.comprable.poseedor) {
         Jugador j=jugadores[c.comprable.poseedor];
         TAB;printf("Propietario: %s",j.nombre);NLN;
         u1 casas=(c.comprable.calle.casas);
         u1 hotel=(c.comprable.calle.hotel);
-        TAB;printf("Casas; %hhi Hoteles; %hhi",casas,hotel);NLN;
-        TAB;printf("Alquiler: %hhi",c.comprable.calle.alquiler[casas+hotel]);NLN;
+        TAB;printf("Casas: %i Hoteles: %i",casas,hotel);NLN;
+        TAB;printf("Alquiler: %i",c.comprable.calle.alquiler[casas+hotel]);NLN;
     } else {
-        TAB;printf("Precio terreno: %hhi",c.comprable.precio);NLN;
-        TAB;printf("Precio casa: %hhi",c.comprable.calle.precio_casa);NLN;
+        TAB;printf("Precio terreno: %i",c.comprable.precio);NLN;
+        TAB;printf("Precio casa: %i",c.comprable.calle.precio_casa);NLN;
     }
 }   
 
@@ -106,29 +106,160 @@ static void callinit() {
     callnew(39,"Sagrada Familia",7,400,200,dal(50,200,600,1400,1700,2000));
 }
 
-static void negnew(u1 numero,char* nombre,u2 precio,u2 alquiler_base) {
+static void negnew(u1 numero,char* nombre,u2 alquiler_base) {
     Casilla* c=casnew(numero,NEGOCIO,nombre);
-    Comprable* cm=compnew(c,precio);
+    Comprable* cm=compnew(c,150);
     cm->negocio.alquiler_base=alquiler_base;
     cm->negocio.alquiler=alquiler_base*dado(1);
 }
 
 static void negprt(Casilla c) {
-    printf("Num: %i Nom: %s");NLN;
+    printf("%02i. %s",c.numero,c.nombre);NLN;
     if(c.comprable.poseedor) {
         Jugador j=jugadores[c.comprable.poseedor];
         TAB;printf("Propietario: %s",j.nombre);NLN;
         TAB;printf("Alquiler: %i",c.comprable.negocio.alquiler);NLN;
     } else {
-        TAB; printf("Precio: %i",c.comprable.precio);
+        TAB; printf("Precio: %i",c.comprable.precio);NLN;
     }
 }
 
-static void trsnew(u1 numero,char* nombre,u2 precio,u2 alquiler) {
-    Casilla* c=casnew(numero,TRANSPORTE,nombre);
-    Comprable* cm=compnew(c,precio);
-    cm->transporte.alquiler=alquiler;
+static void neginit() {
+    negnew(12,"Companyia Electrica",10);
+    negnew(27,"Aigues de Barcelona",4);
 }
 
+static void trenew(u1 numero,char* nombre) {
+    Casilla* c=casnew(numero,TRENES,nombre);
+    Comprable* cm=compnew(c,200);
+    cm->tren.alquiler_base=25;
+    cm->tren.estaciones=cm->tren.alquiler=0;
+}
+
+static void treprt(Casilla c) {
+    printf("%02i. %s",c.numero,c.nombre);NLN;
+    if(c.comprable.poseedor) {
+        Jugador j=jugadores[c.comprable.poseedor];
+        TAB;printf("Propietario: %s",j.nombre);NLN;
+        TAB;printf("Alquiler: %i",c.comprable.tren.alquiler);NLN;
+    } else {
+        TAB; printf("Precio: %i",c.comprable.precio);NLN;
+    }
+}
+
+static void treinit() {
+    trenew(5,"Estacion de França");
+    trenew(15,"Estacion de Sants");
+    trenew(25,"Estacion de Passeig de Gracia");
+    trenew(35,"Estacion del Clot");
+}
+
+static void cacprt(Casilla c) {
+    printf("%02i. Caja de Comunidad",c.numero);NLN;
+}
+
+static void cacinit() {
+    /* inicio de todas las casillas de caja de comunidad */
+    u1 ccc[]={2,17,33};
+    for(u1 k=0;k<3;k++) {
+        casnew(ccc[k],COMUNIDAD,"Caja de Comunidad");
+    }
+}
+
+static void sueprt(Casilla c) {
+    printf("%02i. Suerte",c.numero);NLN;
+}
+
+static void sueinit() {
+    /* inicio de todas las casillas de suerte */
+    u1 sc[]={7,22,36};
+    for(u1 k=0;k<3;k++) {
+        casnew(sc[k],SUERTE,"Suerte");
+    }
+}
+
+static void impnew(u1 numero,char* nombre,u2 impuesto) {
+    Casilla* c=casnew(numero,IMPUESTO,nombre);
+    c->impuesto.impuesto=impuesto;
+}
+
+static void impprt(Casilla c) {
+    printf("%02i. Pago de %s",c.numero,c.nombre);NLN;
+    TAB;printf("Tasa: %i",c.impuesto.impuesto);NLN;
+}
+
+static void impinit() {
+    impnew(4,"Impuesto sobre ingresos",200);
+    impnew(38,"Impuesto de lujo",100);
+}
+
+static void espprt(Casilla c) {
+    printf("%02i. %s",c.numero,c.nombre);NLN;
+    if(c.tipo==SALIDA) {
+        TAB;printf("Premio: %i",c.salida.premio);NLN;
+    } else if(c.tipo==IR_CARCEL) {
+        TAB;printf("Multa: %i",c.carcel.sancion);NLN;
+    }
+}
+
+static void espinit() {
+    /* Todas las casillas especiales */
+    Casilla* cs=casnew(0,SALIDA,"Salida");
+    cs->salida.premio=200;
+    casnew(20,PARKING,"Parking Gratuito");
+    casnew(10,CARCEL,"Carcel");
+    Casilla* ic=casnew(30,IR_CARCEL,"Condenado a la Carcel");
+    ic->carcel.sancion=50;
+}
+
+void tabinit() {
+    barinit();
+    callinit();
+    neginit();
+    treinit();
+    cacinit();
+    sueinit();
+    impinit();
+    espinit();
+}
+
+void tabprt() {
+    for(int k=0;k<TABSIZ;k++) {
+        Casilla c=tablero[k];
+        switch(c.tipo) {
+            case SALIDA:
+            case PARKING:
+            case CARCEL:
+            case IR_CARCEL:
+                espprt(c);
+                break;
+            case CALLE:
+                callprt(c);
+                break;
+            case NEGOCIO:
+                negprt(c);
+                break;
+            case TRENES:
+                treprt(c);
+                break;
+            case COMUNIDAD:
+                cacprt(c);
+                break;
+            case SUERTE:
+                sueprt(c);
+                break;
+            case IMPUESTO:
+                impprt(c);
+                break;
+        }
+    }
+}
+
+/* prueba */
+
+int main() {
+    tabinit();
+    tabprt();
+}
 
 

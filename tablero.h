@@ -28,6 +28,8 @@
 #define IMPUESTO 9
 #define PARKING 10
 
+#define MATPOS ((TABSIZ%8==0)?(TABSIZ/8):(1+(TABSIZ/8)))
+
 
 typedef struct {
     u1 barrio; /* numero del barrio al que pertence */
@@ -50,7 +52,7 @@ typedef struct {
 
 typedef struct {
     u2 precio;
-    u1 poseedor;
+    s1 poseedor;
     union {
         Calle calle;
         Negocio negocio;
@@ -86,6 +88,7 @@ typedef struct {
 typedef struct {
     u1 id; /* identidad del barrio, a partir de 0 */
     char nombre[NOMSIZ+1]; /* nombre del barrio */
+    u1 calles; /* numero de calles que tiene el barrio */
 } Barrio;
 
 typedef struct {
@@ -95,6 +98,7 @@ typedef struct {
     u1 humano;
     s1 casilla;
     u1 penalizacion;
+    u1 posesion[MATPOS];
 } Jugador;
 
 typedef Casilla Tablero[TABSIZ];
@@ -105,10 +109,15 @@ extern Tablero tablero;
 extern Barrios barrios;
 extern Jugadores jugadores;
 
+extern u1 numero_jugadores;
+
 void tabinit();
 /* define el tablero */
 
 void tabprt();
 /* imprime todo el tablero */
+
+void juginit();
+/* define todos los jugadores y el numero de jugadores de la partida */
 
 

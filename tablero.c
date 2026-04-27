@@ -5,6 +5,7 @@
 Tablero tablero;
 Barrios barrios;
 Jugadores jugadores;
+u1 numero_jugadores=0;
 
 static char* copy(char* d,char* o) {
     /* copia dos cadenas */
@@ -15,22 +16,23 @@ static char* copy(char* d,char* o) {
     return d;
 }
 
-static void barnew(u1 id,char* nombre) {
+static void barnew(u1 id,char* nombre,u1 calles) {
     Barrio* b=barrios+id;
     copy(b->nombre,nombre);
     b->id=id;
+    b->calles=calles;
 }
 
 static void barinit() {
     /* creacion de todos los barrios */
-    barnew(0,"Gotic");
-    barnew(1,"El Born");
-    barnew(2,"Gracia");
-    barnew(3,"Sants");
-    barnew(4,"Poble Sec");
-    barnew(5,"Eixample");
-    barnew(6,"Les Corts");
-    barnew(7,"Sant Marti");
+    barnew(0,"Gotic",2);
+    barnew(1,"El Born",3);
+    barnew(2,"Gracia",3);
+    barnew(3,"Sants",3);
+    barnew(4,"Poble Sec",3);
+    barnew(5,"Eixample",3);
+    barnew(6,"Les Corts",3);
+    barnew(7,"Sant Marti",2);
 }
 
 #define dal(A,B,C,D,E,F) (u2[]){A,B,C,D,E,F}
@@ -48,7 +50,7 @@ static Comprable* compnew(Casilla* c,u2 precio) {
     /* creacion de un comprable */
     Comprable* cm=&(c->comprable);
     cm->precio=precio;
-    cm->poseedor=0;
+    cm->poseedor=-1;
     return cm;
 }
 
@@ -255,10 +257,31 @@ void tabprt() {
     }
 }
 
+static void jugnew(u1 id,char* nombre,u1 humano) {
+    Jugador* j=jugadores+id;
+    j->id=id;
+    copy(j->nombre,nombre);
+    j->dinero=1500;
+    j->humano=humano;
+    j->casilla=0;
+    j->penalizacion=0;
+    for(u1 k=0;k<MATPOS;k++) j->posesion[k]=0;
+}
+
+void juginit() {
+    numero_jugadores=rnd(JUGMINSIZ,JUGMAXSIZ);
+    char* nombres[]={"John D. Rockefeller","John P. Morgan","Andrew Carnegie","Henry Ford","Cornelius Vanderbilt","John Jacob Astor","Alfred Krupp","Nathan Rothschild"};
+    u1 humano=rnd(0,numero_jugadores-1);
+    for(int k=0;k<numero_jugadores;k++) {
+        jugnew(k,nombres[k],(humano==k));
+    }
+}       
+
 /* prueba */
 
 int main() {
     tabinit();
+    juginit();
     tabprt();
 }
 

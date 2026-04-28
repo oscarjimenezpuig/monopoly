@@ -81,7 +81,6 @@ typedef struct {
         Salida salida;
         Impuesto impuesto;
         Carcel carcel;
-
     };
 } Casilla;
 
@@ -97,7 +96,7 @@ typedef struct {
     s2 dinero;
     u1 humano;
     s1 casilla;
-    u1 penalizacion;
+    u1 condenado;
     u1 posesion[MATPOS];
 } Jugador;
 

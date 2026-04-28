@@ -264,7 +264,7 @@ static void jugnew(u1 id,char* nombre,u1 humano) {
     j->dinero=1500;
     j->humano=humano;
     j->casilla=0;
-    j->penalizacion=0;
+    j->condenado=0;
     for(u1 k=0;k<MATPOS;k++) j->posesion[k]=0;
 }
 

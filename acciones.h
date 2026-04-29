@@ -4,13 +4,21 @@
 
 #define PVC 80 /* tanto por ciento del precio de venta de una casilla */
 
-s1 comprar(u1 jugador,u1 casilla);
+s1 comprar(u1 jugador);
 /* un jugador compra una casilla 
  * 1: Comprado
  * -1: No hay suficiente dinero
  * -2: No esta libre
  * -3: No es casilla comprable
  */
+
+u1 puede_comprar_casa(u1 jugador,u1* casillas);
+/* esta funcion dice si nos podemos comprar una casa en alguna de las casillas de nuestra propiedad
+ * la salida es un vector donde se dan todas las casillas donde podemos comprar y el retorno es el 
+ * numero de casillas que podemos comprar */
+
+s1 comprar_casa(u1 jugador,u1 casilla);
+/* se compra una casa en un terreno de nuestra posesion */
 
 s2 precio_venta(u1 casilla);
 /* se obtiene el precio de venta de una casilla */
@@ -25,6 +33,12 @@ s1 vender(u1 jugador,u1 casilla);
 s1 subastar(u1 subastador,u1* ofertas);
 /* se realiza una subasta donde subastador es el jugador que subasta y por lo tanto no opta */
 /* ofertas es un vector que contiene todas las ofertas de los jugadores excepto la del subastador */
+
+void ir_carcel(u1 jugador);
+/* el jugador va a la carcel se establece la condicion de condenado y se mueve a la casilla de carcel*/
+
+s1 en_carcel(u1 jugador);
+/* rutina que evalua si un jugador esta en la carcel */
 
 u1 casilla_actual(u1 jugador);
 /* se comprueba en que casilla esta el jugador

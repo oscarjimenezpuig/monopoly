@@ -94,9 +94,12 @@ typedef struct {
     u1 id;
     char nombre[NOMSIZ+1];
     s2 dinero;
-    u1 humano;
     s1 casilla;
-    u1 condenado;
+    struct {
+        u1 condenado : 1;
+        u1 carta : 1;
+        u1 humano : 1;
+    };
     u1 posesion[MATPOS];
 } Jugador;
 

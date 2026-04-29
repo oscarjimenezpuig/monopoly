@@ -2,8 +2,9 @@
 
 #include "acciones.h"
 
-s1 comprar(u1 nj,u1 nc) {
+s1 comprar(u1 nj) {
     Jugador* j=jugadores+nj;
+    u1 nc=j->casilla;
     Casilla* c=tablero+nc;
     if(c->tipo==CALLE || c->tipo==NEGOCIO || c->tipo==TRENES) {
         if(c->comprable.poseedor==-1) {
@@ -18,6 +19,28 @@ s1 comprar(u1 nj,u1 nc) {
         } else return -2;
     } else return -3;
 }
+
+static u1 barrio_entero(u1 nj,u1 nb) {
+    /* esta funcion dice si el barrio nb entero pertenece al jugador nj */
+    Casilla* pc=tablero;
+    while(pc!=tablero+TABSIZ) {
+        if(pc->tipo==CALLE) {
+            Calle cll=pc->comprable.calle;
+            if(cll.barrio==nb) break;
+        }
+        pc++;
+    }
+    u1 ncb=barrio[nb].calles;
+    Casilla* fin=pc+nb;
+    while(pc!=fin) {
+        if(pc->poseedor!=nj) return 0;
+        pc++;
+    }
+    return 1
+}
+
+u1 puede_comprar_casa(u1 nj,u1* c) {
+
 
 s2 precio_venta(u1 nc) { 
     Casilla c=tablero[nc];
@@ -50,14 +73,14 @@ s1 vender(u1 nj,u1 nc) {
 
 s1 subastar(u1 ns,u1* o) {
     s1 poseedor=-1;
-    Jugador s=jugadores+ns;
-    u1 nc=s.casilla;
+    Jugador* s=jugadores+ns;
+    u1 nc=s->casilla;
     Casilla* c=tablero+nc;
     if(c->tipo==CALLE || c->tipo==NEGOCIO || c->tipo==TRENES) {
         u1 dinero=0;
         for(u1 k=0;k<numero_jugadores;k++) {
             if(k!=ns) {
-                if(o[k]>dinero) {
+                if(o[k]>dinero && jugadores[k].dinero>=o[k]) {
                     dinero=o[k];
                     poseedor=k;
                 }
@@ -73,6 +96,41 @@ s1 subastar(u1 ns,u1* o) {
         } 
     }
     return poseedor;
+}
+
+void ir_carcel(u1 nj) {
+    static s1 poscar=-1;
+    if(poscar==-1) {
+        Casilla* pc=tablero;
+        while(pc!=tablero+TABSIZ && poscar==-1) {
+            if(pc++->tipo==CARCEL) poscar=pc->numero;
+        }
+    }
+    Jugador* j=jugadores+nj;
+    j->condenado=1;
+    j->casilla=poscar;
+} 
+
+s1 en_carcel(u1 nj) {
+    Jugador* j=jugadores+nj;
+    int ret=0;
+    if(j->condenado) {
+        ret=-1;
+        if(j->carta) {
+            j->carta=0;
+            ret=1;
+        } else if(dado(1)==dado(1)) ret=1;
+        else {
+            Casilla c=tablero[j->casilla];
+            u2 san=c.carcel.sancion;
+            if(j->dinero>san) {
+                j->dinero-=san;
+                ret=3;
+            }
+        }
+    }
+    if(ret>0) j->condenado=0;
+    return ret;
 }
 
 u1 casilla_actual(u1 nj) {
@@ -109,11 +167,3 @@ u1 mover(u1 nj) {
     }
     return ret;
 }
-
-    
-
-
-
-
-    
-

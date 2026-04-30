@@ -1,6 +1,6 @@
 /* MONOPOLY 27/4/26 */
 
-#include "tablero.h"
+#include "cartas.h"
 
 #define PVC 80 /* tanto por ciento del precio de venta de una casilla */
 
@@ -18,7 +18,13 @@ u1 puede_comprar_casa(u1 jugador,u1* casillas);
  * numero de casillas que podemos comprar */
 
 s1 comprar_casa(u1 jugador,u1 casilla);
-/* se compra una casa en un terreno de nuestra posesion */
+/* se compra una casa en un terreno de nuestra posesion
+ * 2: Compra hotel
+ * 1: Compra casa
+ * -1: No hay dinero suficiente
+ * -2: Casilla donde no se puede comprar casa
+ * -3: Sin barrios donde se puede comprar casa
+ */
 
 s2 precio_venta(u1 casilla);
 /* se obtiene el precio de venta de una casilla */
@@ -39,6 +45,12 @@ void ir_carcel(u1 jugador);
 
 s1 en_carcel(u1 jugador);
 /* rutina que evalua si un jugador esta en la carcel */
+
+u1 extrae_comunidad(u1 jugador);
+/* jugador extrae carta de comunidad */
+
+u1 extrae_suerte(u1 jugador);
+/* jugador extrae carta de suerte */
 
 u1 casilla_actual(u1 jugador);
 /* se comprueba en que casilla esta el jugador

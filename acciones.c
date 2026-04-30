@@ -30,16 +30,60 @@ static u1 barrio_entero(u1 nj,u1 nb) {
         }
         pc++;
     }
-    u1 ncb=barrio[nb].calles;
-    Casilla* fin=pc+nb;
+    u1 ncb=barrios[nb].calles;
+    Casilla* fin=pc+ncb;
     while(pc!=fin) {
-        if(pc->poseedor!=nj) return 0;
+        if(pc->comprable.poseedor!=nj) return 0;
         pc++;
     }
-    return 1
+    return 1;
 }
 
 u1 puede_comprar_casa(u1 nj,u1* c) {
+    Casilla* pc=tablero;
+    u1* npc=c;
+    while(pc!=tablero+TABSIZ) {
+        if(pc->tipo==CALLE && pc->comprable.poseedor==nj) {
+            if(barrio_entero(nj,pc->comprable.calle.barrio)) {
+                if(pc->comprable.calle.hotel==0) {
+                    *npc=pc->numero;
+                    npc++;
+                }
+            }
+        }
+        pc++;
+    }
+    return npc-c;
+}
+
+s1 comprar_casa(u1 nj,u1 nc) {
+    u1 cpc[TABSIZ];
+    u1 cpcs=0;
+    u1 found=0;
+    if((cpcs=puede_comprar_casa(nj,cpc))) {
+        u1* pcpc=cpc;
+        while(pcpc!=cpc+cpcs && !found) {
+            if(*pcpc++==nc) found=1;
+        }
+        if(found) {
+            Jugador* j=jugadores+nj;
+            Casilla* c=tablero+nc;
+            u1 precio_casa=c->comprable.calle.precio_casa;
+            if(j->dinero>=precio_casa) {
+                j->dinero-=precio_casa;
+                if(c->comprable.calle.casas==NUMCASHOT) {
+                    c->comprable.calle.hotel=1;
+                    return 2;
+                } else {
+                    c->comprable.calle.casas+=1;
+                    return 1;
+                }
+            } else return -1;
+
+        } else return -2;
+    } else return -3;
+}
+
 
 
 s2 precio_venta(u1 nc) { 

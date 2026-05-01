@@ -4,6 +4,12 @@
 
 #define PVC 80 /* tanto por ciento del precio de venta de una casilla */
 
+s2 pagar_alquiler(u1 jugador);
+/* rutina donde se paga el alquiler de una poblacion en funcion de si es o no suya
+ * numero positivo: representa el alquiler a pagar
+ * -1 : No debe pagar alquiler
+ */
+
 s1 comprar(u1 jugador);
 /* un jugador compra una casilla 
  * 1: Comprado
@@ -29,6 +35,10 @@ s1 comprar_casa(u1 jugador,u1 casilla);
 s2 precio_venta(u1 casilla);
 /* se obtiene el precio de venta de una casilla */
 
+u1 puede_vender(u1 jugador,u1* casillas,u2* venta);
+/* esta funcion dice si un jugador puede vender casillas, da el numero de casillas asi como 
+ * el precio de venta */
+
 s1 vender(u1 jugador,u1 casilla);
 /* un jugador pone a la venta la casilla
  * 1: Vendido
@@ -51,6 +61,13 @@ u1 extrae_comunidad(u1 jugador);
 
 u1 extrae_suerte(u1 jugador);
 /* jugador extrae carta de suerte */
+
+s1 no_arruinado(u1 jugador);
+/* comprueba si un jugador esta arruinado y coloca la bandera de arruinado */
+/* 1 : No esta arruinado
+ * 0: Esta arruinado
+ * -1: Ya estaba arruinado
+ */
 
 u1 casilla_actual(u1 jugador);
 /* se comprueba en que casilla esta el jugador

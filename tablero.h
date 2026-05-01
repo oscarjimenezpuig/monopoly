@@ -45,9 +45,7 @@ typedef struct {
 } Negocio;
 
 typedef struct {
-    u2 alquiler_base; /* alquiler basico por un transporte (directamente proporcional) */
-    u1 estaciones; /* estaciones que tiene el propietario de esta estacion */
-    u2 alquiler; /* alquiler total */
+    u2 alquiler; /* alquiler basico por un transporte (directamente proporcional) */
 } Tren;
 
 typedef struct {
@@ -98,6 +96,7 @@ typedef struct {
     struct {
         u1 condenado : 1;
         u1 carta : 1;
+        u1 arruinado : 1;
         u1 humano : 1;
     };
     u1 posesion[MATPOS];

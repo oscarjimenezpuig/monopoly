@@ -2,6 +2,33 @@
 
 #include "acciones.h"
 
+s2 pagar_alquiler(u1 nj) {
+    Jugador* j=jugadores+nj;
+    Casilla* c=tablero+(j->casilla);
+    s2 alquiler=-1;
+    if((c->tipo==CALLE || c->tipo==NEGOCIO || c->tipo==TRENES) && c->comprable.poseedor!=-1 && c->comprable.poseedor!=nj) {
+        alquiler=0;
+        Comprable* cc=&(c->comprable);
+        if(c->tipo==CALLE) {
+            Calle cll=cc->calle;
+            alquiler=cll.alquiler[cll.casas+cll.hotel];
+        } else if(c->tipo==NEGOCIO) {
+            Negocio* neg=&(cc->negocio);
+            alquiler=neg->alquiler;
+            neg->alquiler=neg->alquiler_base*dado(1);
+        } else if(c->tipo==TRENES) {
+            u1 estaciones=0;
+            Casilla* pc=tablero;
+            while(pc!=tablero+TABSIZ) {
+                if(pc->tipo==TRENES && pc->comprable.poseedor==c->comprable.poseedor) estaciones++;
+                pc++;
+            }
+            alquiler=cc->tren.alquiler*estaciones;
+        }
+    }
+    return alquiler;
+}           
+
 s1 comprar(u1 nj) {
     Jugador* j=jugadores+nj;
     u1 nc=j->casilla;
@@ -84,8 +111,6 @@ s1 comprar_casa(u1 nj,u1 nc) {
     } else return -3;
 }
 
-
-
 s2 precio_venta(u1 nc) { 
     Casilla c=tablero[nc];
     Comprable cc=c.comprable;
@@ -98,6 +123,20 @@ s2 precio_venta(u1 nc) {
     }
     precio=(precio*PVC)/100;
     return precio;
+}
+
+u1 puede_vender(u1 nj,u1* c,u2* pc) {
+    Casilla* punt=tablero;
+    u1* punc=c;
+    u2* punpc=pc;
+    while(punt!=tablero+TABSIZ) {
+        if((punt->tipo==CALLE || punt->tipo==NEGOCIO || punt->tipo==TRENES) && (punt->comprable.poseedor==nj)) {
+            *punc++=punt->numero;
+            *punpc++=precio_venta(punt->numero);
+        }
+        punt++;
+    }
+    return punc-c;
 }
 
 s1 vender(u1 nj,u1 nc) {
@@ -175,6 +214,26 @@ s1 en_carcel(u1 nj) {
     }
     if(ret>0) j->condenado=0;
     return ret;
+}
+
+u1 extrae_comunidad(u1 nj) {
+    carta_comunidad(nj);
+    return 1;
+}
+
+u1 extrae_suerte(u1 nj) {
+    carta_suerte(nj);
+    return 1;
+}
+
+s1 no_arruinado(u1 nj) {
+    Jugador* j=jugadores+nj;
+    if(j->arruinado==0) {
+        if(j->dinero<0) {
+            j->arruinado=1;
+            return 0;
+        } else return 1;
+    } else return -1;
 }
 
 u1 casilla_actual(u1 nj) {

@@ -134,8 +134,7 @@ static void neginit() {
 static void trenew(u1 numero,char* nombre) {
     Casilla* c=casnew(numero,TRENES,nombre);
     Comprable* cm=compnew(c,200);
-    cm->tren.alquiler_base=25;
-    cm->tren.estaciones=cm->tren.alquiler=0;
+    cm->tren.alquiler=25;
 }
 
 static void treprt(Casilla c) {
@@ -264,7 +263,7 @@ static void jugnew(u1 id,char* nombre,u1 humano) {
     j->dinero=1500;
     j->humano=humano;
     j->casilla=0;
-    j->condenado=j->carta=0;
+    j->condenado=j->carta=j->arruinado=0;
     for(u1 k=0;k<MATPOS;k++) j->posesion[k]=0;
 }
 

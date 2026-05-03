@@ -115,6 +115,9 @@ extern u1 numero_jugadores;
 void tabinit();
 /* define el tablero */
 
+void casprt(u1 num);
+/* se imprime la casilla con el numero dado */
+
 void tabprt();
 /* imprime todo el tablero */
 

@@ -82,6 +82,6 @@ check:
 #MAKEFILE VARIABLE
 
 NAME =  monopoly
-SCRS = random.c tablero.c cartas.c acciones.c
+SCRS = random.c tablero.c cartas.c acciones.c humano.c
 INCLUDES = #-lX11
 

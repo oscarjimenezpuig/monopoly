@@ -8,7 +8,8 @@
 #define prt printf
 #define prts(A) printf("%s",A)
 #define prtv(A) printf("%i",(A))
-#define tab printf("   ");
+#define tab printf("   ")
+#define nln puts("")
 
 
 u1 input(u1 len,char* str);

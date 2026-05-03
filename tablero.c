@@ -224,36 +224,38 @@ void tabinit() {
     espinit();
 }
 
-void tabprt() {
-    for(int k=0;k<TABSIZ;k++) {
-        Casilla c=tablero[k];
-        switch(c.tipo) {
-            case SALIDA:
-            case PARKING:
-            case CARCEL:
-            case IR_CARCEL:
-                espprt(c);
-                break;
-            case CALLE:
-                callprt(c);
-                break;
-            case NEGOCIO:
-                negprt(c);
-                break;
-            case TRENES:
-                treprt(c);
-                break;
-            case COMUNIDAD:
-                cacprt(c);
-                break;
-            case SUERTE:
-                sueprt(c);
-                break;
-            case IMPUESTO:
-                impprt(c);
-                break;
-        }
+void casprt(u1 num) {
+    Casilla c=tablero[k];
+    switch(c.tipo) {
+        case SALIDA:
+        case PARKING:
+        case CARCEL:
+        case IR_CARCEL:
+            espprt(c);
+            break;
+        case CALLE:
+            callprt(c);
+            break;
+        case NEGOCIO:
+            negprt(c);
+            break;
+        case TRENES:
+            treprt(c);
+            break;
+        case COMUNIDAD:
+            cacprt(c);
+            break;
+        case SUERTE:
+            sueprt(c);
+            break;
+        case IMPUESTO:
+            impprt(c);
+            break;
     }
+}
+
+void tabprt() {
+    for(int k=0;k<TABSIZ;k++) casprt(k);    
 }
 
 static void jugnew(u1 id,char* nombre,u1 humano) {
@@ -274,7 +276,7 @@ void juginit() {
     for(int k=0;k<numero_jugadores;k++) {
         jugnew(k,nombres[k],(humano==k));
     }
-}       
+} 
 
 /* prueba */
 

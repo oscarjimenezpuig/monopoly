@@ -69,10 +69,11 @@ static u1 barrio_entero(u1 nj,u1 nb) {
 u1 puede_comprar_casa(u1 nj,u1* c) {
     Casilla* pc=tablero;
     u1* npc=c;
+    Jugador j=jugadores[nj];
     while(pc!=tablero+TABSIZ) {
         if(pc->tipo==CALLE && pc->comprable.poseedor==nj) {
             if(barrio_entero(nj,pc->comprable.calle.barrio)) {
-                if(pc->comprable.calle.hotel==0) {
+                if(pc->comprable.calle.hotel==0 && pc->comprable.precio_casa<=j.dinero) {
                     *npc=pc->numero;
                     npc++;
                 }

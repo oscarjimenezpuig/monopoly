@@ -67,6 +67,9 @@ u1 extrae_comunidad(u1 jugador);
 u1 extrae_suerte(u1 jugador);
 /* jugador extrae carta de suerte */
 
+s2 impuesto_lujo(u1 jugador);
+/* el jugador cae en la casilla de impuesto, devuelve el impuesto pagado */
+
 s1 no_arruinado(u1 jugador);
 /* comprueba si un jugador esta arruinado y coloca la bandera de arruinado */
 /* todas sus posesiones pasan al mercado libre y desaparecen casas y hoteles */

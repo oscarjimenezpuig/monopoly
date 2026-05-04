@@ -229,6 +229,13 @@ u1 extrae_suerte(u1 nj) {
     return 1;
 }
 
+u1 impuesto_lujo(u1 nj) {
+    const s2 IDL=100;
+    Jugador* j=jugadores+nj;
+    j->dinero-=IDL;
+    return 1;
+}
+
 s1 no_arruinado(u1 nj) {
     Jugador* j=jugadores+nj;
     if(j->arruinado==0) {

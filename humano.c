@@ -197,6 +197,12 @@ subasta:
     }
 }
 
+static void humano_impuesto(u1 nj) {
+    prts("Debes pagar un Impuesto de Lujo.");
+    nln;
+    prt("El pago es de %i.\n",impuesto_lujo(nj));
+}
+
         
     
 

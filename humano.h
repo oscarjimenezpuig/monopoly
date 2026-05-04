@@ -16,4 +16,7 @@ u1 input(u1 len,char* str);
 /* funcion que hace una entrada de cadena de caracteres */
 
 void turno_humano(u1 jugador);
-/* Efectua turno de humano */
+/* efectua turno de humano */
+
+u2 subasta_humano(u1 jugador,u1 casilla);
+/* se demanda el dinero que ofrecera un humano por una casilla */

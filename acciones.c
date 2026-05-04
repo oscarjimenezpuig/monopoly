@@ -2,6 +2,8 @@
 
 #include "acciones.h"
 
+static s1 subasta_flag=-1;
+
 s2 pagar_alquiler(u1 nj) {
     Jugador* j=jugadores+nj;
     Casilla* c=tablero+(j->casilla);
@@ -73,7 +75,7 @@ u1 puede_comprar_casa(u1 nj,u1* c) {
     while(pc!=tablero+TABSIZ) {
         if(pc->tipo==CALLE && pc->comprable.poseedor==nj) {
             if(barrio_entero(nj,pc->comprable.calle.barrio)) {
-                if(pc->comprable.calle.hotel==0 && pc->comprable.precio_casa<=j.dinero) {
+                if(pc->comprable.calle.hotel==0 && pc->comprable.calle.precio_casa<=j.dinero) {
                     *npc=pc->numero;
                     npc++;
                 }
@@ -232,9 +234,22 @@ s1 no_arruinado(u1 nj) {
     if(j->arruinado==0) {
         if(j->dinero<0) {
             j->arruinado=1;
+            for(int k=0;k<TABSIZ;k++) {
+                Casilla* c=tablero+k;
+                if((c->tipo==CALLE || c->tipo==NEGOCIO || c->tipo==TRENES) && c->comprable.poseedor==nj) {
+                    c->comprable.poseedor=-1;
+                }
+            }
             return 0;
         } else return 1;
     } else return -1;
+}
+
+u1 es_ganador(u1 nj) {
+    for(int k=0;k<numero_jugadores;k++) {
+        if((k==nj && jugadores[k].arruinado) || (k!=nj && !jugadores[k].arruinado)) return 0;
+    }
+    return 1;
 }
 
 u1 casilla_actual(u1 nj) {
@@ -270,4 +285,16 @@ u1 mover(u1 nj) {
         j->casilla+=avance;
     }
     return ret;
+}
+
+void subasta_flag_on(u1 f) {
+    subasta_flag=f;
+}
+
+void subasta_flag_off() {
+    subasta_flag=-1;
+}
+
+s1 subasta_flag_get() {
+    return subasta_flag;
 }

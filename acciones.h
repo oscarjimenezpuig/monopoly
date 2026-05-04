@@ -54,7 +54,12 @@ void ir_carcel(u1 jugador);
 /* el jugador va a la carcel se establece la condicion de condenado y se mueve a la casilla de carcel*/
 
 s1 en_carcel(u1 jugador);
-/* rutina que evalua si un jugador esta en la carcel */
+/* rutina que evalua si un jugador esta en la carcel
+ * 1: Sale de la carcel porque tienes la carta de perdon 
+ * 2: Sales de la carcel por un error judicial
+ * 3: Sales de la carcel porque pagas la multa
+ * 0: No sales de la carcel
+ */
 
 u1 extrae_comunidad(u1 jugador);
 /* jugador extrae carta de comunidad */
@@ -64,10 +69,14 @@ u1 extrae_suerte(u1 jugador);
 
 s1 no_arruinado(u1 jugador);
 /* comprueba si un jugador esta arruinado y coloca la bandera de arruinado */
+/* todas sus posesiones pasan al mercado libre y desaparecen casas y hoteles */
 /* 1 : No esta arruinado
  * 0: Esta arruinado
  * -1: Ya estaba arruinado
  */
+
+u1 es_ganador(u1 jugador);
+/* esta funcion dice si el jugador es ganador */
 
 u1 casilla_actual(u1 jugador);
 /* se comprueba en que casilla esta el jugador
@@ -86,5 +95,15 @@ u1 mover(u1 jugador);
  * 2: Pasa por salida
  * 4: Saca doble
  */
+
+void subasta_flag_on(u1 jugador);
+/* se conecta la bandera de subasta */
+
+void subasta_flag_off();
+/* se desconecta la bandera de subasta */
+
+s1 subasta_flag_get();
+/* da el valor de la bandera de subasta */
+
 
 

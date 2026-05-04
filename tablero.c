@@ -225,7 +225,7 @@ void tabinit() {
 }
 
 void casprt(u1 num) {
-    Casilla c=tablero[k];
+    Casilla c=tablero[num];
     switch(c.tipo) {
         case SALIDA:
         case PARKING:

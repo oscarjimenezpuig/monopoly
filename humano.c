@@ -12,6 +12,16 @@ u1 input(u1 len,char* str) {
     return ps-str;
 }
 
+void presentacion_humano(u1 nj) {
+    Jugador j=jugadores[nj];
+    prts("Bienvenido al MONOPOLY Barcelona.");
+    nln;
+    prt("Eres %s y dispones de %i para batir a los restantes %i jugadores.",j.nombre,j.dinero,numero_jugadores-1);
+    nln;
+    prts("SUERTE!!!");
+    nln;
+}
+
 static void humano_venta(u1 nj) {
     /* esta funcion decide si puede vender */
     u1 cav[TABSIZ];
@@ -71,6 +81,8 @@ static void humano_descripcion(u1 nj) {
     nln;
     casprt(j.casilla); 
     s1 res=0;
+    prt("Tienes: %i",j.dinero);
+    nln;
     do {
         char ans[2];
         prts("Quieres ver tus posesiones (Y/n)? ");
@@ -99,22 +111,6 @@ static void humano_descripcion(u1 nj) {
     }
 }
 
-static u2 humano_subasta(u1 nj,u1 c) {
-    Jugador j=jugadores[nj];
-    prts("SUBASTA");
-    nln;
-    prts("Se subasta: ");
-    casprt(c);
-    while(1) {
-        prt("Tienes %i. Cual es tu oferta? ",j.dinero);
-        char sof[20];
-        input(19,sof);
-        u2 of;
-        sscanf(sof,"%hi",&of);
-        if(of>0 && of<=j.dinero) return of;
-    }
-    return 0;
-}
 
 static void humano_ir_carcel(u1 nj) {
     /* funcion que envia al humano a la carcel */
@@ -125,22 +121,27 @@ static void humano_ir_carcel(u1 nj) {
 
 static void humano_en_carcel(u1 nj) {
     /* funcion que evalua si un humano esta en la carcel */
-    prts("Estas condenado en la carcel...");
-    nln;
-    s1 res=en_carcel(nj);
-    switch(res) {
-       case 1:
-           prts("Sales de la carcel porque tienes la Carta de Perdon.");
-           break;
-       case 2:
-           prts("Sales de la carcel por un error judicial.");
-           break;
-       case 3:
-           prts("Sales de la carcel por que pagas la multa.");
-           break;
-       default:
-           prts("Todavia no has cumplido tu condena");
-   }
+    Jugador* j=jugadores+nj;
+    if(j->condenado) {
+        prts("Estas condenado en la carcel...");
+        nln;
+        s1 res=en_carcel(nj);
+        switch(res) {
+           case 1:
+               prts("Sales de la carcel porque tienes la Carta de Perdon.");
+               break;
+           case 2:
+               prts("Sales de la carcel por un error judicial.");
+               break;
+           case 3:
+               prts("Sales de la carcel por que pagas la multa.");
+               break;
+           default:
+               prts("Todavia no has cumplido tu condena");
+       }
+    } else {
+        prts("Estas de visita en la carcel.");
+    }
    nln;
 }
 
@@ -202,6 +203,82 @@ static void humano_impuesto(u1 nj) {
     nln;
     prt("El pago es de %i.\n",impuesto_lujo(nj));
 }
+
+static void humano_mueve(u1 nj) {
+    u1 flag=mover(nj);
+    if(flag & 8) {
+        prts("Por exceso de velocidad, eres condenado a la carcel...");
+        nln;
+    } else if(flag & 4) {
+        prts("Aceleras... Cuidado no te saltes los limites!!!");
+        nln;
+    }
+    if(flag & 2) {
+        prts("Ha pasado un ciclo, te llevaras ingresos de premio...");
+        nln;
+    } else if((flag & 4)==0 && (flag & 1)) {
+        prts("Avanzas...");
+        nln;
+    }
+}
+
+void turno_humano(u1 nj) {
+    Jugador *j=jugadores+nj;
+    if(j->inicio) humano_descripcion(nj);
+    humano_venta(nj);
+    humano_casa(nj);
+    humano_mueve(nj);
+    j->inicio=0;
+    humano_descripcion(nj);
+    s1 ca=casilla_actual(nj);
+    switch(ca) {
+        case 3:
+            humano_suerte(nj);
+            break;
+        case 2:
+            humano_comunidad(nj);
+            break;
+        case 1:
+            humano_comprar(nj);
+            break;
+        case -1:
+            humano_alquiler(nj);
+            break;
+        case -2:
+            humano_ir_carcel(nj);
+            break;
+        case -3:
+            humano_impuesto(nj);
+            break;
+        case -4:
+            humano_en_carcel(nj);
+            break;
+    }
+}
+
+u2 subasta_humano(u1 nj,u1 c) {
+    Jugador j=jugadores[nj];
+    prts("SUBASTA");
+    nln;
+    prts("Se subasta: ");
+    casprt(c);
+    while(1) {
+        prt("Tienes %i. Cual es tu oferta? ",j.dinero);
+        char sof[20];
+        input(19,sof);
+        u2 of;
+        sscanf(sof,"%hi",&of);
+        if(of>0 && of<=j.dinero) return of;
+    }
+    return 0;
+}
+
+
+
+
+    
+    
+    
 
         
     

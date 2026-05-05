@@ -81,7 +81,7 @@ s1 no_arruinado(u1 jugador);
 u1 es_ganador(u1 jugador);
 /* esta funcion dice si el jugador es ganador */
 
-u1 casilla_actual(u1 jugador);
+s1 casilla_actual(u1 jugador);
 /* se comprueba en que casilla esta el jugador
  * 3: Suerte
  * 2: Comunidad
@@ -90,6 +90,7 @@ u1 casilla_actual(u1 jugador);
  * -1: Alquila
  * -2: Ir carcel
  *  -3: Impuesto
+ *  -4: En carcel
  */
 
 u1 mover(u1 jugador);
@@ -97,6 +98,7 @@ u1 mover(u1 jugador);
  * 1: Movimiento realizado
  * 2: Pasa por salida
  * 4: Saca doble
+ * 8: Va a la carcel por exceso de velocidad
  */
 
 void subasta_flag_on(u1 jugador);

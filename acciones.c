@@ -229,11 +229,11 @@ u1 extrae_suerte(u1 nj) {
     return 1;
 }
 
-u1 impuesto_lujo(u1 nj) {
+s2 impuesto_lujo(u1 nj) {
     const s2 IDL=100;
     Jugador* j=jugadores+nj;
     j->dinero-=IDL;
-    return 1;
+    return IDL;
 }
 
 s1 no_arruinado(u1 nj) {
@@ -259,7 +259,7 @@ u1 es_ganador(u1 nj) {
     return 1;
 }
 
-u1 casilla_actual(u1 nj) {
+s1 casilla_actual(u1 nj) {
     Jugador* j=jugadores+nj;
     Casilla c=tablero[j->casilla];
     u1 t=c.tipo;
@@ -273,6 +273,8 @@ u1 casilla_actual(u1 nj) {
         return -3;
     } else if(t==CALLE || t==TRENES || t==NEGOCIO) {
         return 1;
+    } else if(t==CARCEL) {
+        return -4;
     } else return 0;
 }
 
@@ -283,13 +285,20 @@ u1 mover(u1 nj) {
     u1 d1=dado(1);
     u1 d2=dado(2);
     ret=(d1==d2)?4:1;
-    u1 avance=d1+d2;
-    if(actual+avance>=TABSIZ) {
-        j->casilla=(j->casilla+avance)%TABSIZ;
-        ret|=2;
-        j->dinero+=tablero[0].salida.premio;
+    if(ret==4) j->repite+=1;
+    else j->repite=0;
+    if(j->repite==3) {
+        ir_carcel(nj);
+        ret=8;
     } else {
-        j->casilla+=avance;
+        u1 avance=d1+d2;
+        if(actual+avance>=TABSIZ && !j->inicio) {
+            j->casilla=(j->casilla+avance)%TABSIZ;
+            ret|=2;
+            j->dinero+=tablero[0].salida.premio;
+        } else {
+            j->casilla+=avance;
+        }
     }
     return ret;
 }

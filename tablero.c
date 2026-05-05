@@ -265,7 +265,8 @@ static void jugnew(u1 id,char* nombre,u1 humano) {
     j->dinero=1500;
     j->humano=humano;
     j->casilla=0;
-    j->condenado=j->carta=j->arruinado=0;
+    j->condenado=j->carta=j->arruinado=j->repite=0;
+    j->inicio=1;
     for(u1 k=0;k<MATPOS;k++) j->posesion[k]=0;
 }
 
@@ -277,13 +278,4 @@ void juginit() {
         jugnew(k,nombres[k],(humano==k));
     }
 } 
-
-/* prueba */
-
-int main() {
-    tabinit();
-    juginit();
-    tabprt();
-}
-
 

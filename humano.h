@@ -15,6 +15,9 @@
 u1 input(u1 len,char* str);
 /* funcion que hace una entrada de cadena de caracteres */
 
+void presentacion_humano(u1 jugador);
+/* presentacion del humano */
+
 void turno_humano(u1 jugador);
 /* efectua turno de humano */
 

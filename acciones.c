@@ -272,24 +272,26 @@ s1 casilla_actual(u1 nj) {
     } else if(t==IMPUESTO) {
         return -3;
     } else if(t==CALLE || t==TRENES || t==NEGOCIO) {
-        return 1;
+        return (c.comprable.poseedor==-1)?1:-1;
     } else if(t==CARCEL) {
         return -4;
     } else return 0;
 }
 
 u1 mover(u1 nj) {
-    u1 ret=1;
+    u1 ret=0;
     Jugador* j=jugadores+nj;
     u1 actual=j->casilla;
     u1 d1=dado(1);
     u1 d2=dado(2);
     ret=(d1==d2)?4:1;
-    if(ret==4) j->repite+=1;
-    else j->repite=0;
+    if(d1==d2) {
+        j->repite+=1;
+        ret|=4;
+    } else j->repite=0;
     if(j->repite==3) {
         ir_carcel(nj);
-        ret=8;
+        ret|=8;
     } else {
         u1 avance=d1+d2;
         if(actual+avance>=TABSIZ && !j->inicio) {
@@ -298,6 +300,7 @@ u1 mover(u1 nj) {
             j->dinero+=tablero[0].salida.premio;
         } else {
             j->casilla+=avance;
+            ret|=1;
         }
     }
     return ret;

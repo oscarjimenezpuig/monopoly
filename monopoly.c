@@ -17,7 +17,7 @@ static s1 find_humano() {
 
 static void cabecera() {
     const int TERMW=80;
-    //system("clear");
+    system("clear");
     printf("\033[7mMONOPOLY\033[0m\n");
     printf("2026 oSCAR jIMENEZ pUIG\n");
     for(int k=0;k<TERMW;k++) printf("=");
@@ -29,5 +29,10 @@ int main() {
     u1 nhumano=find_humano();
     cabecera();
     presentacion_humano(nhumano);
+    while(1) {
+        for(u1 k=0;k<numero_jugadores;k++) {
+            if(k==nhumano) turno_humano(k);
+        }
+    }
 }
 

@@ -69,7 +69,7 @@ static void callnew(u1 numero,char* nombre,u1 barrio,u2 precio,u2 precio_casa,u2
 static void callprt(Casilla c) {
     Barrio b=barrios[c.comprable.calle.barrio];
     printf("%02i. Calle %s (%s)",c.numero,c.nombre,b.nombre);NLN;
-    if(c.comprable.poseedor) {
+    if(c.comprable.poseedor>=0) {
         Jugador j=jugadores[c.comprable.poseedor];
         TAB;printf("Propietario: %s",j.nombre);NLN;
         u1 casas=(c.comprable.calle.casas);

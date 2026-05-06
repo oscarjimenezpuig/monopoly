@@ -5,8 +5,8 @@
 u1 input(u1 len,char* str) {
     char* ps=str;
     char c=0;
-    while(ps-str<len && (c=getchar())!=EOI) {
-        *ps++=c;
+    while((c=getchar())!=EOI) {
+        if(ps-str<len) *ps++=c;
     }
     *ps=EOS;
     return ps-str;
@@ -163,9 +163,15 @@ static void humano_alquiler(u1 nj) {
     /* el humano ha de pagar el alquiler */
     Jugador j=jugadores[nj];
     Casilla c=tablero[j.casilla];
-    Jugador p=jugadores[c.comprable.poseedor];
-    prt("Acabas de llegar a una propiedad de %s.\n",p.nombre);
-    prt("Has pagado un alquiler de %i.\n",pagar_alquiler(nj));
+    u1 np=c.comprable.poseedor;
+    if(nj==np) {
+        prts("Acabas de llegar a una calle de tu propiedad.");
+        nln;
+    } else {
+        Jugador p=jugadores[c.comprable.poseedor]; 
+        prt("Acabas de llegar a una propiedad de %s.\n",p.nombre);
+        prt("Has pagado un alquiler de %i.\n",pagar_alquiler(nj));
+    }
 }
 
 static void humano_comprar(u1 nj) {
@@ -209,16 +215,19 @@ static void humano_mueve(u1 nj) {
     if(flag & 8) {
         prts("Por exceso de velocidad, eres condenado a la carcel...");
         nln;
-    } else if(flag & 4) {
-        prts("Aceleras... Cuidado no te saltes los limites!!!");
-        nln;
-    }
-    if(flag & 2) {
-        prts("Ha pasado un ciclo, te llevaras ingresos de premio...");
-        nln;
-    } else if((flag & 4)==0 && (flag & 1)) {
-        prts("Avanzas...");
-        nln;
+    } else  {
+        if(flag & 4) {
+            prts("Aceleras... Cuidado no te saltes los limites!!!");
+            nln;
+        }
+        if(flag & 2) {
+            prts("Ha pasado un ciclo, te llevaras ingresos de premio...");
+            nln;
+        }
+        if((flag & 1)) {
+            prts("Avanzas...");
+            nln;
+        }
     }
 }
 

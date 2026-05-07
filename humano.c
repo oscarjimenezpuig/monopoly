@@ -43,6 +43,9 @@ static void humano_venta(u1 nj) {
         if(val && vender(nj,cav[val-1])) {
             prts("Vendido");nln;
         }
+    } else {
+        prts("No tienes nada para vender...");
+        nln;
     }
 }
 
@@ -69,6 +72,30 @@ static void humano_casa(u1 nj) {
             if(res==1) prts("Comprada casa");
             else if(res==2) prts("Comprado hotel");
         }
+    } else {
+        prts("No puedes comprar casas.");
+        nln;
+    }
+}
+
+static void humano_posesiones(u1 nj) {
+    u1 posesion=0;
+    for(int k=0;k<TABSIZ;k++) {
+        Casilla c=tablero[k];
+        if(c.tipo==CALLE || c.tipo==NEGOCIO || c.tipo==TRENES) {
+            Comprable cc=c.comprable;
+            if(cc.poseedor==nj) {
+                posesion=1;
+                if(c.tipo==CALLE) {
+                    tab;prt("%s (%s)",c.nombre,barrios[cc.calle.barrio].nombre);nln;
+                } else {
+                    tab;prt("%s",c.nombre);nln;
+                }
+            }
+        }
+    }
+    if(posesion==0){
+        prts("No tienes nada");nln;
     }
 }
 
@@ -80,37 +107,9 @@ static void humano_descripcion(u1 nj) {
     prt("Estas en:");
     nln;
     casprt(j.casilla); 
-    s1 res=0;
     prt("Tienes: %i",j.dinero);
     nln;
-    do {
-        char ans[2];
-        prts("Quieres ver tus posesiones (Y/n)? ");
-        input(1,ans);
-        res=(*ans=='Y')?1:(*ans=='n')?-1:0;
-    }while(!res);
-    if(res==1) {
-        u1 posesion=0;
-        for(int k=0;k<TABSIZ;k++) {
-            Casilla c=tablero[k];
-            if(c.tipo==CALLE || c.tipo==NEGOCIO || c.tipo==TRENES) {
-                Comprable cc=c.comprable;
-                if(cc.poseedor==nj) {
-                    posesion=1;
-                    if(c.tipo==CALLE) {
-                        tab;prt("%s (%s)",c.nombre,barrios[cc.calle.barrio].nombre);nln;
-                    } else {
-                        tab;prt("%s",c.nombre);nln;
-                    }
-                }
-            }
-        }
-        if(posesion==0){
-            prts("No tienes nada");nln;
-        }
-    }
 }
-
 
 static void humano_ir_carcel(u1 nj) {
     /* funcion que envia al humano a la carcel */
@@ -231,13 +230,36 @@ static void humano_mueve(u1 nj) {
     }
 }
 
+static void humano_que_haces(u1 nj) {
+    Jugador* j=jugadores+nj;
+pregunta:
+    prts("Que quieres hacer?");
+    nln;
+    tab;prts("1. Ver posesiones.");nln;
+    tab;prts("2. Vender posesiones. ");nln;
+    tab;prts("3. Comprar casa o hotel.");nln;
+    if(j->condenado) {
+        tab;prts("4. Seguir mi condena.");nln;
+    } else {
+        tab;prts("4. Avanzar.");nln;
+    }
+    char sop[2];
+    input(1,sop);
+    if(*sop=='1') {
+        humano_posesiones(nj);
+        goto pregunta;
+    } else if(*sop=='2') {
+        humano_venta(nj);
+        goto pregunta;
+    } else if(*sop=='3') {
+        humano_casa(nj);
+        goto pregunta;
+    } else if(*sop=='4') {
+        if(j->condenado==0) humano_mueve(nj);
+    } else goto pregunta;
+}
+
 void turno_humano(u1 nj) {
-    Jugador *j=jugadores+nj;
-    if(j->inicio) humano_descripcion(nj);
-    humano_venta(nj);
-    humano_casa(nj);
-    humano_mueve(nj);
-    j->inicio=0;
     humano_descripcion(nj);
     s1 ca=casilla_actual(nj);
     switch(ca) {
@@ -262,6 +284,13 @@ void turno_humano(u1 nj) {
         case -4:
             humano_en_carcel(nj);
             break;
+    }
+    s1 na=no_arruinado(nj);
+    if(na==1) {
+        humano_que_haces(nj);
+    } else if(na==0) {
+        prts("Lo siento... TE HAS ARRUINADO!!!");
+        nln;
     }
 }
 

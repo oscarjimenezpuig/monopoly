@@ -29,7 +29,24 @@ s2 pagar_alquiler(u1 nj) {
         }
     }
     return alquiler;
-}           
+}  
+
+static u1 barrio_entero(u1 nj,u1 nb) {
+    /* esta funcion dice si el barrio nb entero pertenece al jugador nj */
+    int ncb=barrios[nb].calles;
+    Casilla* pc=tablero;
+    while(pc!=tablero+TABSIZ) {
+        if(pc->tipo==CALLE) {
+            Comprable cc=pc->comprable;
+            if(cc.poseedor==nj) {
+                Calle cll=cc.calle;
+                if(cll.barrio==nb) ncb--;
+            }
+        }
+        pc++;
+    }
+    return (ncb==0);
+}
 
 s1 comprar(u1 nj) {
     Jugador* j=jugadores+nj;
@@ -43,30 +60,13 @@ s1 comprar(u1 nj) {
                 u1 pos=nc/8;
                 u1 bit=1<<(nc%8);
                 j->posesion[pos]|=bit;
-                return 1;
+                if(c->tipo==CALLE) return barrio_entero(nj,c->comprable.calle.barrio)?2:1;
+                else return 1;
             } else return -1;
         } else return -2;
     } else return -3;
 }
 
-static u1 barrio_entero(u1 nj,u1 nb) {
-    /* esta funcion dice si el barrio nb entero pertenece al jugador nj */
-    Casilla* pc=tablero;
-    while(pc!=tablero+TABSIZ) {
-        if(pc->tipo==CALLE) {
-            Calle cll=pc->comprable.calle;
-            if(cll.barrio==nb) break;
-        }
-        pc++;
-    }
-    u1 ncb=barrios[nb].calles;
-    Casilla* fin=pc+ncb;
-    while(pc!=fin) {
-        if(pc->comprable.poseedor!=nj) return 0;
-        pc++;
-    }
-    return 1;
-}
 
 u1 puede_comprar_casa(u1 nj,u1* c) {
     Casilla* pc=tablero;
@@ -185,16 +185,11 @@ s1 subastar(u1 ns,u1* o) {
 }
 
 void ir_carcel(u1 nj) {
-    static s1 poscar=-1;
-    if(poscar==-1) {
-        Casilla* pc=tablero;
-        while(pc!=tablero+TABSIZ && poscar==-1) {
-            if(pc++->tipo==CARCEL) poscar=pc->numero;
-        }
-    }
+    const u1 POSCAR=10;
     Jugador* j=jugadores+nj;
     j->condenado=1;
-    j->casilla=poscar;
+    j->casilla=POSCAR;
+    j->no_avance=1;
 } 
 
 s1 en_carcel(u1 nj) {
@@ -294,7 +289,7 @@ u1 mover(u1 nj) {
         ret|=8;
     } else {
         u1 avance=d1+d2;
-        if(actual+avance>=TABSIZ && !j->inicio) {
+        if(actual+avance>=TABSIZ) {
             j->casilla=(j->casilla+avance)%TABSIZ;
             ret|=2;
             j->dinero+=tablero[0].salida.premio;

@@ -11,7 +11,8 @@ s2 pagar_alquiler(u1 jugador);
  */
 
 s1 comprar(u1 jugador);
-/* un jugador compra una casilla 
+/* un jugador compra una casilla
+ * 2: Tienes barrio entero
  * 1: Comprado
  * -1: No hay suficiente dinero
  * -2: No esta libre

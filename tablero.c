@@ -117,7 +117,7 @@ static void negnew(u1 numero,char* nombre,u2 alquiler_base) {
 
 static void negprt(Casilla c) {
     printf("%02i. %s",c.numero,c.nombre);NLN;
-    if(c.comprable.poseedor) {
+    if(c.comprable.poseedor>=0) {
         Jugador j=jugadores[c.comprable.poseedor];
         TAB;printf("Propietario: %s",j.nombre);NLN;
         TAB;printf("Alquiler: %i",c.comprable.negocio.alquiler);NLN;
@@ -127,8 +127,8 @@ static void negprt(Casilla c) {
 }
 
 static void neginit() {
-    negnew(12,"Companyia Electrica",10);
-    negnew(27,"Aigues de Barcelona",4);
+    negnew(12,"FECSA Empresa de Electricidad",10);
+    negnew(27,"AGBAR Empresa de Aguas",4);
 }
 
 static void trenew(u1 numero,char* nombre) {
@@ -139,7 +139,7 @@ static void trenew(u1 numero,char* nombre) {
 
 static void treprt(Casilla c) {
     printf("%02i. %s",c.numero,c.nombre);NLN;
-    if(c.comprable.poseedor) {
+    if(c.comprable.poseedor>=0) {
         Jugador j=jugadores[c.comprable.poseedor];
         TAB;printf("Propietario: %s",j.nombre);NLN;
         TAB;printf("Alquiler: %i",c.comprable.tren.alquiler);NLN;
@@ -265,8 +265,7 @@ static void jugnew(u1 id,char* nombre,u1 humano) {
     j->dinero=1500;
     j->humano=humano;
     j->casilla=0;
-    j->condenado=j->carta=j->arruinado=j->repite=0;
-    j->inicio=1;
+    j->condenado=j->carta=j->arruinado=j->repite=j->no_avance=0;
     for(u1 k=0;k<MATPOS;k++) j->posesion[k]=0;
 }
 

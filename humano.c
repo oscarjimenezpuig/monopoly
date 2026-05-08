@@ -12,6 +12,13 @@ u1 input(u1 len,char* str) {
     return ps-str;
 }
 
+void pulsa_intro() {
+    char str[1];
+    prts("<PULSA INTRO PARA SEGUIR>");
+    nln;
+    input(0,str);
+}
+
 void presentacion_humano(u1 nj) {
     Jugador j=jugadores[nj];
     prts("Bienvenido al MONOPOLY Barcelona.");
@@ -80,6 +87,8 @@ static void humano_casa(u1 nj) {
 
 static void humano_posesiones(u1 nj) {
     u1 posesion=0;
+    prts("POSESIONES");
+    nln;
     for(int k=0;k<TABSIZ;k++) {
         Casilla c=tablero[k];
         if(c.tipo==CALLE || c.tipo==NEGOCIO || c.tipo==TRENES) {
@@ -107,7 +116,7 @@ static void humano_descripcion(u1 nj) {
     prt("Estas en:");
     nln;
     casprt(j.casilla); 
-    prt("Tienes: %i",j.dinero);
+    prt("Tienes: \033[7m%i\033[0m",j.dinero);
     nln;
 }
 
@@ -184,14 +193,19 @@ static void humano_comprar(u1 nj) {
         nln;
         char rsp[2];
         do {
-            prts("Quieres comprarla (Y/n)? ");
+            prts("Quieres comprarla (s/N)? ");
             input(1,rsp);
-        }while(*rsp!='Y' && *rsp!='n');
-        if(*rsp=='n') goto subasta;
+        }while(*rsp!='s' && *rsp!='N');
+        if(*rsp=='N') goto subasta;
         else {
-            comprar(nj);
+            s1 r=comprar(nj);
             prts("Has comprado la propiedad.");
             nln;
+            if(r==2) {
+                prt("Todo el barrio de %s es tuyo.",barrios[c.comprable.calle.barrio].nombre);
+                nln;
+                pulsa_intro();
+            }     
         }
     } else {
         prts("No tienes suficiente dinero para comprarla...");
@@ -222,6 +236,7 @@ static void humano_mueve(u1 nj) {
         if(flag & 2) {
             prts("Ha pasado un ciclo, te llevaras ingresos de premio...");
             nln;
+            pulsa_intro();
         }
         if((flag & 1)) {
             prts("Avanzas...");
@@ -232,32 +247,34 @@ static void humano_mueve(u1 nj) {
 
 static void humano_que_haces(u1 nj) {
     Jugador* j=jugadores+nj;
+    if(!j->no_avance) {
 pregunta:
-    prts("Que quieres hacer?");
-    nln;
-    tab;prts("1. Ver posesiones.");nln;
-    tab;prts("2. Vender posesiones. ");nln;
-    tab;prts("3. Comprar casa o hotel.");nln;
-    if(j->condenado) {
-        tab;prts("4. Seguir mi condena.");nln;
-    } else {
-        tab;prts("4. Avanzar.");nln;
-    }
-    char sop[2];
-    input(1,sop);
-    if(*sop=='1') {
-        humano_posesiones(nj);
-        goto pregunta;
-    } else if(*sop=='2') {
-        humano_venta(nj);
-        goto pregunta;
-    } else if(*sop=='3') {
-        humano_casa(nj);
-        goto pregunta;
-    } else if(*sop=='4') {
-        if(j->condenado==0) humano_mueve(nj);
-    } else goto pregunta;
-    j->inicio=0;
+        prts("Que quieres hacer?");
+        nln;
+        tab;prts("1. Ver posesiones.");nln;
+        tab;prts("2. Vender posesiones. ");nln;
+        tab;prts("3. Comprar casa o hotel.");nln;
+        if(j->condenado) {
+            tab;prts("4. Seguir mi condena.");nln;
+        } else {
+            tab;prts("4. Avanzar.");nln;
+        }
+        prts("Introduce opcion: ");
+        char sop[2];
+        input(1,sop);
+        if(*sop=='1') {
+            humano_posesiones(nj);
+            goto pregunta;
+        } else if(*sop=='2') {
+            humano_venta(nj);
+            goto pregunta;
+        } else if(*sop=='3') {
+            humano_casa(nj);
+            goto pregunta;
+        } else if(*sop=='4') {
+            if(j->condenado==0) humano_mueve(nj);
+        } else goto pregunta;
+    } else j->no_avance=0;
 }
 
 void turno_humano(u1 nj) {

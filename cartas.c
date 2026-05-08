@@ -10,10 +10,12 @@
 #define ncr(S) printf("%s.\n",S);
 #define paga(A) printf("Paga: %i.\n",(A));j->dinero-=(A);
 #define cobra(A) printf("Cobra: %i.\n",(A));j->dinero+=(A);
+#define navc j->no_avance=1;
 
 fcc(0){
     j->casilla=0;
     ncr("Ves a la casilla de salida y cobra el premio");
+    navc;
 }
 
 fcc(1){
@@ -35,12 +37,14 @@ fcc(4){
     int destino=rnd(0,TABSIZ-1);
     printf("Vas a la casilla %i.\n",destino);
     j->casilla=destino;
+    navc;
 }
 
 fcc(5) {
     ncr("Condenado a la carcel");
     j->condenado=1;
     j->casilla=10;
+    navc;
 }
 
 fcc(6) {
@@ -141,31 +145,37 @@ fcs(0) {
 fcs(1) {
     ncr("Avanzaras a la calle mas cercana");
     busca_casilla_tipo(j,CALLE);
+    navc;
 }
 
 fcs(2) {
     ncr("Avanzas a la estacion mas cercana");
     busca_casilla_tipo(j,TRENES);
+    navc;
 }
 
 fcs(3) {
     ncr("Vas a Espanya");
     ir(19);
+    navc;
 }
 
 fcs(4) {
     ncr("Vas a Paseo de Gracia");
     ir(28);
+    navc;
 }
 
 fcs(5) {
     ncr("Avanzas al servicio publico mas cercano");
     busca_casilla_tipo(j,NEGOCIO);
+    navc;
 }
 
 fcs(6) {
     ncr("Retrocedes tres posiciones");
     ir(j->casilla-3);
+    navc;
 }
 
 fcs(7) {
@@ -224,6 +234,7 @@ fcs(14) {
 fcs(15) {
     ncr("Vas a Sagrada Familia");
     ir(39);
+    navc;
 }
 
 typedef void (*Suerte)(Jugador*);

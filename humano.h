@@ -15,6 +15,9 @@
 u1 input(u1 len,char* str);
 /* funcion que hace una entrada de cadena de caracteres */
 
+void pulsa_intro();
+/* funcion que demanda la pulsacion de la tecla intro */
+
 void presentacion_humano(u1 jugador);
 /* presentacion del humano */
 

@@ -98,7 +98,7 @@ typedef struct {
         u1 carta : 1;
         u1 arruinado : 1;
         u1 humano : 1;
-        u1 inicio : 1;
+        u1 no_avance : 1;
         u1 repite : 2;
     };
     u1 posesion[MATPOS];

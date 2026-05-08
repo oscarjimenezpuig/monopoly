@@ -19,7 +19,8 @@ static void cabecera() {
     const int TERMW=80;
     system("clear");
     printf("\033[7mMONOPOLY\033[0m\n");
-    printf("2026 oSCAR jIMENEZ pUIG\n");
+    printf("oSCAR jIMENEZ pUIG\n");
+    printf("2026\n");
     for(int k=0;k<TERMW;k++) printf("=");
     printf("\n");
 }

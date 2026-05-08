@@ -40,6 +40,7 @@ fcc(4){
 fcc(5) {
     ncr("Condenado a la carcel");
     j->condenado=1;
+    j->casilla=10;
 }
 
 fcc(6) {

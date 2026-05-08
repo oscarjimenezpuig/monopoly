@@ -102,7 +102,7 @@ static void humano_posesiones(u1 nj) {
 static void humano_descripcion(u1 nj) {
     /* funcion que hace una descripcion al inicio del turno */
     Jugador j=jugadores[nj];
-    prt("TURNO DE %s (HUMANO)",j.nombre);
+    prt("\033[1mTURNO DE %s (HUMANO)\033[0m",j.nombre);
     nln;
     prt("Estas en:");
     nln;
@@ -257,6 +257,7 @@ pregunta:
     } else if(*sop=='4') {
         if(j->condenado==0) humano_mueve(nj);
     } else goto pregunta;
+    j->inicio=0;
 }
 
 void turno_humano(u1 nj) {

@@ -62,11 +62,16 @@ static void humano_casa(u1 nj) {
     u1 cacs=puede_comprar_casa(nj,cac);
     if(cacs) {
         prts("COMPRA DE CASAS O HOTELES");
+        nln;
         prts("Puedes comprar casas o hoteles en las siguientes calles:");
         for(int k=0;k<cacs;k++) {
             Casilla c=tablero[cac[k]];
-            u2 precio=c.comprable.calle.precio_casa;
-            prt("%i. %s (%i)",k+1,c.nombre,precio);
+            Comprable cc=c.comprable;
+            Calle cll=cc.calle;
+            u2 precio=cll.precio_casa;
+            u1 casas=cll.casas;
+            u1 hotel=cll.hotel;
+            prt("%i. %s Casas: %i Hoteles: %i Precio: %i",k+1,c.nombre,casas,hotel,precio);
             nln;
         }
         prts("Introduce el numero (0 si no quieres comprar ninguna casa) ");
@@ -96,7 +101,8 @@ static void humano_posesiones(u1 nj) {
             if(cc.poseedor==nj) {
                 posesion=1;
                 if(c.tipo==CALLE) {
-                    tab;prt("%s (%s)",c.nombre,barrios[cc.calle.barrio].nombre);nln;
+                    Calle cll=cc.calle;
+                    tab;prt("%s (%s) Casas:%i Hoteles:%i",c.nombre,barrios[cll.barrio].nombre,cll.casas,cll.hotel);nln;
                 } else {
                     tab;prt("%s",c.nombre);nln;
                 }

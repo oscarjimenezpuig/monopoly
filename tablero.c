@@ -258,6 +258,14 @@ void tabprt() {
     for(int k=0;k<TABSIZ;k++) casprt(k);    
 }
 
+static u1 jugriesg() {
+    /* el riesgo de un jugador del ordenador indica el numero minimo antes de que empiece a vender propiedades */
+    const u1 PROP=50;
+    const u1 MIN=1;
+    const u1 MAX=4;
+    return PROP*rnd(MIN,MAX);
+}
+
 static void jugnew(u1 id,char* nombre,u1 humano) {
     Jugador* j=jugadores+id;
     j->id=id;
@@ -266,6 +274,7 @@ static void jugnew(u1 id,char* nombre,u1 humano) {
     j->humano=humano;
     j->casilla=0;
     j->condenado=j->carta=j->arruinado=j->repite=j->no_avance=0;
+    if(j->humano==0) j->riesgo=jugriesg();
     for(u1 k=0;k<MATPOS;k++) j->posesion[k]=0;
 }
 

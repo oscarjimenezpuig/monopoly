@@ -102,6 +102,7 @@ typedef struct {
         u1 repite : 2;
     };
     u1 posesion[MATPOS];
+    u1 riesgo;
 } Jugador;
 
 typedef Casilla Tablero[TABSIZ];

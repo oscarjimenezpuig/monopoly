@@ -257,27 +257,35 @@ static void humano_que_haces(u1 nj) {
 pregunta:
         prts("Que quieres hacer?");
         nln;
-        tab;prts("1. Ver posesiones.");nln;
-        tab;prts("2. Vender posesiones. ");nln;
-        tab;prts("3. Comprar casa o hotel.");nln;
+        tab;prts("1. Ver clasificacion");nln;
+        tab;prts("2. Ver tablero.");nln;
+        tab;prts("3. Ver posesiones.");nln;
+        tab;prts("4. Vender posesiones. ");nln;
+        tab;prts("5. Comprar casa o hotel.");nln;
         if(j->condenado) {
-            tab;prts("4. Seguir mi condena.");nln;
+            tab;prts("6. Seguir mi condena.");nln;
         } else {
-            tab;prts("4. Avanzar.");nln;
+            tab;prts("6. Avanzar.");nln;
         }
         prts("Introduce opcion: ");
         char sop[2];
         input(1,sop);
         if(*sop=='1') {
-            humano_posesiones(nj);
+            clasificacion();
             goto pregunta;
         } else if(*sop=='2') {
-            humano_venta(nj);
+            tablero_posesion();
             goto pregunta;
         } else if(*sop=='3') {
-            humano_casa(nj);
+            humano_posesiones(nj);
             goto pregunta;
         } else if(*sop=='4') {
+            humano_venta(nj);
+            goto pregunta;
+        } else if(*sop=='5') {
+            humano_casa(nj);
+            goto pregunta;
+        } else if(*sop=='6') {
             if(j->condenado==0) humano_mueve(nj);
         } else goto pregunta;
     } else j->no_avance=0;

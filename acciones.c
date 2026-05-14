@@ -195,12 +195,14 @@ void ir_carcel(u1 nj) {
 s1 en_carcel(u1 nj) {
     Jugador* j=jugadores+nj;
     int ret=0;
+    int a=dado(1);
+    int b=dado(1);
     if(j->condenado) {
         ret=-1;
         if(j->carta) {
             j->carta=0;
             ret=1;
-        } else if(dado(1)==dado(1)) ret=1;
+        } else if(a==b) ret=2;
         else {
             Casilla c=tablero[j->casilla];
             u2 san=c.carcel.sancion;
@@ -312,3 +314,53 @@ void subasta_flag_off() {
 s1 subasta_flag_get() {
     return subasta_flag;
 }
+
+static void casilla_posesion(u1 tipo,s1 barrio) {
+    for(u1 k=0;k<TABSIZ;k++) {
+        Casilla c=tablero[k];
+        if(c.tipo==tipo) {
+            Comprable cc=c.comprable;
+            if(cc.poseedor!=-1) {
+                if(c.tipo!=CALLE || cc.calle.barrio==barrio) {
+                    printf("   %s de %s\n",c.nombre,jugadores[cc.poseedor].nombre);
+                }
+            }
+        }
+    }
+}
+
+void tablero_posesion() {
+    printf("\033[1mDISTRIBUCION DE TERRITORIOS\033[0m\n");
+    for(int b=0;b<BARSIZ;b++) {
+        printf("BARRIO %s (%i)\n",barrios[b].nombre,barrios[b].calles);
+        casilla_posesion(CALLE,b);
+    }
+    printf("NEGOCIOS\n");
+    casilla_posesion(NEGOCIO,-1);
+    printf("ESTACIONES\n");
+    casilla_posesion(TRENES,-1);
+}
+
+static void jugins(u1 nj,u1 dim,u1* js) {
+    Jugador j=jugadores[nj];
+    u1 p=0;
+    for(;p<dim;p++) {
+        Jugador jc=jugadores[p];
+        if(j.dinero>jc.dinero) break;
+    }
+    for(int k=dim-1;k>=p;k--) js[k+1]=js[k];
+    js[p]=nj;
+}   
+
+void clasificacion() {
+    u1 ord[numero_jugadores];
+    for(int k=0;k<numero_jugadores;k++) {
+        jugins(k,k,ord);
+    }
+    printf("\033[1mCLASIFICACION\033[0m\n");
+    for(int k=0;k<numero_jugadores;k++) {
+        Jugador j=jugadores[ord[k]];
+        printf("   %i. %s (%i)\n",k+1,j.nombre,j.dinero);
+    }
+}
+

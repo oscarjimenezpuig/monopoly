@@ -111,5 +111,9 @@ void subasta_flag_off();
 s1 subasta_flag_get();
 /* da el valor de la bandera de subasta */
 
+void tablero_posesion();
+/* muestra el tablero con las posesiones (si no, no sale la casilla) */
 
+void clasificacion();
+/* funcion que ordena los jugadores segun el liquido actual */
 

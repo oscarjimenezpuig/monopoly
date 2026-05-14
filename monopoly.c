@@ -1,6 +1,6 @@
 /* MONOPOLY 5/5/26 */
 
-#include "humano.h"
+#include "ordenador.h"
 
 static void inicio() {
     tabinit();
@@ -30,9 +30,15 @@ int main() {
     u1 nhumano=find_humano();
     cabecera();
     presentacion_humano(nhumano);
+    u2 turno=1;
     while(1) {
+        prt("\033[7mTURNO %i\033[0m\n",turno++);
         for(u1 k=0;k<numero_jugadores;k++) {
             if(k==nhumano) turno_humano(k);
+            else {
+                turno_ordenador(k);
+                pulsa_intro();
+            }
         }
     }
 }

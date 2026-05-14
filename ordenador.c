@@ -8,6 +8,7 @@ typedef u1 Condition(Casilla*);
 #define jon(A) jo(A).nombre
 #define jod(A) jo(A).dinero
 #define joc(A) jo(A).casilla
+#define joC(A) jo(A).condenado
 
 static Casilla* pttab(u1 ini,Condition con) {
     /* recorre todas las casillas, cuando ini, se inica desce el principio */
@@ -124,17 +125,20 @@ static u1 getpos(u1 nj,u1* p) {
 }
 
 static void ordenador_venta(u1 nj) {
-    /* el ordenador ha decidido vender una de sus posesiones */
-    u1 caspos[TABSIZ];
-    u1 size=getpos(nj,caspos);
-    if(size) {
-        u1 ocaspos[size];
-        ordpos(nj,ocaspos,size,caspos);
-        u1 cav=ocaspos[size-1];
-        Casilla c=tablero[cav];
-        prt("%s ha vendido %s.",jon(nj),c.nombre);
-        nln;
-        vender(nj,cav);
+    /* mira si el ordenador ha decidido vender una de sus posesiones */
+    Jugador j=jo(nj);
+    if(j.dinero<j.riesgo) {
+        u1 caspos[TABSIZ];
+        u1 size=getpos(nj,caspos);
+        if(size) {
+            u1 ocaspos[size];
+            ordpos(nj,ocaspos,size,caspos);
+            u1 cav=ocaspos[size-1];
+            Casilla c=tablero[cav];
+            prt("%s ha vendido %s.",j.nombre,c.nombre);
+            nln;
+            vender(nj,cav);
+        }
     }
 }
 
@@ -252,10 +256,10 @@ static void ordenador_alquiler(u1 nj) {
     }
 }
 
-static void ordenador_comprar(u1 nj,u1 nc) {
+static void ordenador_comprar(u1 nj) {
     /* el ordenador intenta comprar una casilla comprable */
     Jugador j=jo(nj);
-    Casilla c=tablero[nc];
+    Casilla c=tablero[j.casilla];
     Comprable cc=c.comprable;
     int prac=j.dinero-cc.precio;
     if(prac>=j.riesgo) {
@@ -281,7 +285,7 @@ static void ordenador_mueve(u1 nj) {
         nln;
     } else  {
         if(flag & 4) {
-            prt("%s Acelera...",jon(nj));
+            prt("%s acelera...",jon(nj));
             nln;
         }
         if(flag & 2) {
@@ -289,9 +293,78 @@ static void ordenador_mueve(u1 nj) {
             nln;
         }
         if((flag & 1)) {
-            prt("%s Avanza...",jon(nj));
+            prt("%s avanza...",jon(nj));
             nln;
         }
     }
 }
+
+static void ordenador_que_haces(u1 nj) {
+    ordenador_venta(nj);
+    ordenador_casa(nj);
+    if(joC(nj)) ordenador_en_carcel(nj);
+    else ordenador_mueve(nj);
+}
+
+static void frase_ruina(u1 nj) {
+    prt("%s SE HA ARRUINADO. ",jon(nj));
+    u1 num=rnd(0,3);
+    switch(num) {
+        case 0:
+            prts("Su cadaver ha aparecido flotando en el rio...");
+            break;
+        case 1:
+            prts("Se ha pegado un tiro en el Casino de Barcelona...");
+            break;
+        case 2:
+            prts("Ha aparecido colgado en una habitacion del Rich...");
+            break;
+        case 3: 
+            prts("Su cadaver ha aparecido en el barrio Chino con una sobredosis de morfina");
+            break;
+    }
+    nln;
+    pulsa_intro();
+}
+
+void turno_ordenador(u1 nj) {
+    ordenador_descripcion(nj);
+    s1 ca=casilla_actual(nj);
+    switch(ca) {
+        case 3:
+            ordenador_suerte(nj);
+            break;
+        case 2:
+            ordenador_comunidad(nj);
+            break;
+        case 1:
+            ordenador_comprar(nj);
+            break;
+        case -1:
+            ordenador_alquiler(nj);
+            break;
+        case -2:
+            ordenador_ir_carcel(nj);
+            break;
+        case -3:
+            ordenador_impuesto(nj);
+            break;
+        case -4:
+            ordenador_en_carcel(nj);
+            break;
+    }
+    s1 na=no_arruinado(nj);
+    if(na==1) {
+        ordenador_que_haces(nj);
+    } else if(na==0) frase_ruina(nj);
+}
+
+u2 subasta_ordenador(u1 nj,u1 c) {
+    /* TODO Programar la subasta */
+    return 0;
+}
+
+
+    
+    
 

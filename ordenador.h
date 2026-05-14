@@ -2,4 +2,4 @@
 
 #include "humano.h"
 
-
+void turno_ordenador(u1 nj);
